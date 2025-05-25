@@ -1,0 +1,146 @@
+
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>每日熱量記錄</title>
+  <style>
+    body { font-family: Arial; margin: 20px; background: #f9f9f9; }
+    h1, h2 { margin-top: 20px; }
+    .meal { border: 1px solid #ccc; background: #fff; padding: 10px; margin-bottom: 10px; border-radius: 8px; }
+    .meal-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    .meal-table th, .meal-table td { border: 1px solid #ccc; padding: 5px; text-align: center; }
+    .meal-table th { background: #eee; }
+    input[type="text"], input[type="number"] { width: 100px; margin-right: 5px; }
+    button { margin-top: 5px; }
+    #daily-total { font-weight: bold; color: #d9534f; }
+  </style>
+</head>
+<body>
+
+  <h1>每日熱量記錄</h1>
+
+  <div id="meals">
+    <div class="meal" data-meal="早餐">
+      <h2>早餐</h2>
+      <input type="text" placeholder="食物名稱" class="food-name" />
+      <input type="number" placeholder="熱量" class="food-calorie" />
+      <input type="number" placeholder="份量" class="food-amount" value="1" />
+      <button onclick="addFood(this)">加入</button>
+      <table class="meal-table">
+        <thead>
+          <tr><th>食物</th><th>熱量</th><th>份量</th><th>總熱量</th><th>操作</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <p>本餐總熱量：<span class="meal-total">0</span> 大卡</p>
+    </div>
+
+    <div class="meal" data-meal="午餐">
+      <h2>午餐</h2>
+      <input type="text" placeholder="食物名稱" class="food-name" />
+      <input type="number" placeholder="熱量" class="food-calorie" />
+      <input type="number" placeholder="份量" class="food-amount" value="1" />
+      <button onclick="addFood(this)">加入</button>
+      <table class="meal-table">
+        <thead>
+          <tr><th>食物</th><th>熱量</th><th>份量</th><th>總熱量</th><th>操作</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <p>本餐總熱量：<span class="meal-total">0</span> 大卡</p>
+    </div>
+
+    <div class="meal" data-meal="晚餐">
+      <h2>晚餐</h2>
+      <input type="text" placeholder="食物名稱" class="food-name" />
+      <input type="number" placeholder="熱量" class="food-calorie" />
+      <input type="number" placeholder="份量" class="food-amount" value="1" />
+      <button onclick="addFood(this)">加入</button>
+      <table class="meal-table">
+        <thead>
+          <tr><th>食物</th><th>熱量</th><th>份量</th><th>總熱量</th><th>操作</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <p>本餐總熱量：<span class="meal-total">0</span> 大卡</p>
+    </div>
+
+    <div class="meal" data-meal="宵夜">
+      <h2>宵夜</h2>
+      <input type="text" placeholder="食物名稱" class="food-name" />
+      <input type="number" placeholder="熱量" class="food-calorie" />
+      <input type="number" placeholder="份量" class="food-amount" value="1" />
+      <button onclick="addFood(this)">加入</button>
+      <table class="meal-table">
+        <thead>
+          <tr><th>食物</th><th>熱量</th><th>份量</th><th>總熱量</th><th>操作</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <p>本餐總熱量：<span class="meal-total">0</span> 大卡</p>
+    </div>
+  </div>
+
+  <h2>每日總熱量：<span id="daily-total">0</span> 大卡</h2>
+
+  <script>
+    function addFood(button) {
+      const mealDiv = button.closest('.meal');
+      const name = mealDiv.querySelector('.food-name').value.trim();
+      const calorie = parseInt(mealDiv.querySelector('.food-calorie').value);
+      const amount = parseInt(mealDiv.querySelector('.food-amount').value);
+
+      if (!name || isNaN(calorie) || isNaN(amount)) {
+        alert('請填寫完整資訊');
+        return;
+      }
+
+      const tbody = mealDiv.querySelector('tbody');
+      const tr = document.createElement('tr');
+      const totalCal = calorie * amount;
+      tr.innerHTML = \`
+        <td>\${name}</td>
+        <td>\${calorie}</td>
+        <td>\${amount}</td>
+        <td>\${totalCal}</td>
+        <td><button onclick="removeFood(this)">刪除</button></td>
+      \`;
+      tbody.appendChild(tr);
+
+      mealDiv.querySelector('.food-name').value = '';
+      mealDiv.querySelector('.food-calorie').value = '';
+      mealDiv.querySelector('.food-amount').value = '1';
+
+      updateMealTotal(mealDiv);
+      updateDailyTotal();
+    }
+
+    function removeFood(button) {
+      const tr = button.closest('tr');
+      const mealDiv = button.closest('.meal');
+      tr.remove();
+      updateMealTotal(mealDiv);
+      updateDailyTotal();
+    }
+
+    function updateMealTotal(mealDiv) {
+      let total = 0;
+      mealDiv.querySelectorAll('tbody tr').forEach(tr => {
+        total += parseInt(tr.children[3].textContent);
+      });
+      mealDiv.querySelector('.meal-total').textContent = total;
+    }
+
+    function updateDailyTotal() {
+      let total = 0;
+      document.querySelectorAll('.meal-total').forEach(span => {
+        total += parseInt(span.textContent);
+      });
+      document.getElementById('daily-total').textContent = total;
+    }
+  </script>
+
+</body>
+</html>
